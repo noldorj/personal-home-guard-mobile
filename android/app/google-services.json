@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "733818232650",
+    "firebase_url": "https://pvalarmes-3f7ee-default-rtdb.firebaseio.com",
+    "project_id": "pvalarmes-3f7ee",
+    "storage_bucket": "pvalarmes-3f7ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733818232650:android:8cf4c7e4fb32f7e4f86bb3",
+        "android_client_info": {
+          "package_name": "br.com.pv.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733818232650-nni9f4t5itob6eodpgbjel388ivbf18f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn3PIaLy4_JOz2xdN9tnYOOlRYf1-guOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733818232650-nni9f4t5itob6eodpgbjel388ivbf18f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
