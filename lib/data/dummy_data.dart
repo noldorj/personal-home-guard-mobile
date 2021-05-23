@@ -13,7 +13,7 @@ final ALERTS_DUMMY = [
           'https://firebasestorage.googleapis.com/v0/b/pvalarmes-3f7ee.appspot.com/o/foto_alerta.jpg?alt=media&token=755e0108-33f2-4cf2-8646-26c4498a37dc',
       urlImageFirebase: 'gs://pvalarmes-3f7ee.appspot.com/foto_alerta.jpg',
       urlImageLocal: ''),
-  Alert(
+  /* Alert(
       id: '03-31-2021-11-43-01',
       cameraName: 'Cam_Garagem',
       regionName: 'garagem',
@@ -109,4 +109,5 @@ final ALERTS_DUMMY = [
       urlImageDownload:
           'https://firebasestorage.googleapis.com/v0/b/pvalarmes-3f7ee.appspot.com/o/foto_alerta.jpg?alt=media&token=755e0108-33f2-4cf2-8646-26c4498a37dc',
       urlImageLocal: ''),
+ */
 ];

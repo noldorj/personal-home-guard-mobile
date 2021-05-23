@@ -1,52 +1,149 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
-import 'package:pv/providers/alert.dart';
+
 import 'package:pv/utils/appRoutes.dart';
-import 'package:pv/utils/db_util.dart';
+
 import '../providers/alerts.dart';
 
 class MainManagement extends StatefulWidget {
+  MainManagement(RemoteMessage messageReceived);
+
   @override
-  _MainManagementState createState() => _MainManagementState();
+  _MainManagementState createState() => _MainManagementState(RemoteMessage);
 }
 
 class _MainManagementState extends State<MainManagement> {
+  _MainManagementState(msg);
+
   DateTime _selectedDate, _yesterday, _today, _weekPeriod, _monthPeriod;
+
+  FlutterLocalNotificationsPlugin fltNotification;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    'This channel is used for important notifications.', // description
+    importance: Importance.max,
+  );
 
   @override
   initState() {
+    notitficationPermission();
+    initMessaging();
+    initializeFlutterFire();
     super.initState();
+  }
 
-    final fbm = FirebaseMessaging();
+  void getToken() async {
+    var token = await messaging.getToken();
 
+    print('getToken:: Token: $token');
+  }
+
+  void handleMsgFromBackground(msg) async {
     final alerts = Provider.of<Alerts>(context, listen: false);
+    alerts.saveAlertDevice(msg);
+  }
 
-    fbm.configure(
-      onMessage: (msg) {
-        print('onMessage...');
-        //print(msg);
-        alerts.saveAlertDevice(msg);
-        return;
-      },
-      onResume: (msg) {
-        print('onResume...');
-        //print(msg);
-        alerts.saveAlertDevice(msg);
-        return;
-      },
-      onLaunch: (msg) {
-        print('onLaunch...');
-        //print(msg);
-        alerts.saveAlertDevice(msg);
-        return;
-      },
+  void initMessaging() async {
+    var androiInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    var iosInit = IOSInitializationSettings();
+
+    var initSetting = InitializationSettings(android: androiInit, iOS: iosInit);
+
+    //await FirebaseMessaging.instance.subscribeToTopic('igorddf.gmail.com');
+
+    fltNotification = FlutterLocalNotificationsPlugin();
+    await fltNotification
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    fltNotification.initialize(initSetting);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      //print('onMessage.listen');
+
+      final alerts = Provider.of<Alerts>(context, listen: false);
+
+      alerts.saveAlertDevice(message);
+
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification.android;
+
+      // If `onMessage` is triggered with a notification, construct our own
+      // local notification to show to users using the created channel.
+      if (notification != null && android != null) {
+        await fltNotification.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                icon: android?.smallIcon,
+                // other properties...
+              ),
+            ));
+      }
+
+      showNotification(message);
+    });
+  }
+
+  // Define an async function to initialize FlutterFire
+  void initializeFlutterFire() async {
+    try {
+      // Wait for Firebase to initialize and set `_initialized` state to true
+      await Firebase.initializeApp();
+    } catch (e) {
+      // Set `_error` state to true if Firebase initialization fails
+      print('Error Firebase.initializeApp(): ${e.toString()}');
+    }
+  }
+
+  void showNotification(RemoteMessage msg) async {
+    var androidDetails = AndroidNotificationDetails(
+      channel.id,
+      channel.name,
+      channel.description,
     );
 
-    fbm.requestNotificationPermissions();
+    print('Channel name: ${androidDetails.channelName}');
+
+    var iosDetails = IOSNotificationDetails();
+
+    var generalNotificationDetails =
+        NotificationDetails(android: androidDetails, iOS: iosDetails);
+
+    await fltNotification.show(0, msg.notification.title, msg.notification.body,
+        generalNotificationDetails,
+        payload: 'Notification');
+  }
+
+  void notitficationPermission() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+    print(
+        'notitficationPermission:: seetings: ${settings.authorizationStatus}');
   }
 
   _showDatePicker() {

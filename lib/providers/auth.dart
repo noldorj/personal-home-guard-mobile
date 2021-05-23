@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../exceptions/auth_exception.dart';
@@ -62,11 +63,22 @@ class Auth with ChangeNotifier {
         ),
       );
 
+      //post salvar token no realtime_database
+      /* const url = 'https://pvalarmes-3f7ee-default-rtdb.firebaseio.com/';
+      http.post(
+        url,
+        body: null,
+      ); */
+
       Store.saveMap('userData', {
         "token": _token,
         "userId": _userId,
         "expiryDate": _expiryDate.toIso8601String(),
       });
+
+      String topic = email.replaceAll("@", ".");
+      print("Topic: $topic");
+      await FirebaseMessaging.instance.subscribeToTopic(topic);
 
       _autoLogout();
       notifyListeners();

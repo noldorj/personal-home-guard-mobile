@@ -9,17 +9,24 @@ class ImageAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     Alert alert = ModalRoute.of(context).settings.arguments;
     var image = new File(alert.urlImageLocal);
+    var date = alert.date;
+    var camera = alert.cameraName;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(alert.textAlert),
       ),
-      body: Container(
-        width: double.infinity,
-        child: Image.file(
-          image,
-          fit: BoxFit.fitWidth,
-          width: double.infinity,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              child: Image.file(
+                image,
+              ),
+            ),
+            Text('$date'),
+            Text('$camera'),
+          ],
         ),
       ),
     );

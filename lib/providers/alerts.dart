@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pv/data/dummy_data.dart';
@@ -21,12 +22,17 @@ class Alerts with ChangeNotifier {
   //String _token;
   //String _userId;
 
+  Alerts() {
+    this.loadAllAlerts();
+  }
   List<Alert> _items = [];
 
   void loadItemsTest() async {
     print('alerts::loadItemsTest');
     for (Alert item in ALERTS_DUMMY) {
-      String imageSavedPath = await saveImage(item.urlImageDownload, item.id);
+      print('loaditemsTest:: urlImageFirebase: ${item.urlImageFirebase}');
+      String imageSavedPath = await saveImage(
+          item.urlImageDownload, item.id, item.urlImageFirebase);
       print('imageSavedPath: $imageSavedPath');
       item.urlImageLocal = imageSavedPath;
       addAlert(item);
@@ -159,26 +165,77 @@ class Alerts with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveAlertDevice(msg) async {
-    final dynamic notification = msg['notification'];
-    final dynamic data = msg['data'];
+  Future<void> saveAlertDevice(RemoteMessage msg) async {
+    final RemoteNotification notification = msg.notification;
 
-    print('alerts::saveAlertDevice');
+    print('::saveAlertDevice');
+    print('');
+
+    var cameraName,
+        id,
+        regionName,
+        date,
+        objectDetected,
+        textAlert,
+        urlImageDownload,
+        urlImageFirebase;
+
+    MapEntry entry = msg.data.entries.firstWhere(
+        (element) => element.key == 'regionName',
+        orElse: () => null);
+    regionName = entry.value;
+    print('regionName: ${entry.value}');
+
+    entry = msg.data.entries.firstWhere(
+        (element) => element.key == 'cameraName',
+        orElse: () => null);
+    cameraName = entry.value;
+    print('cameraName: ${entry.value}');
+
+    entry = msg.data.entries
+        .firstWhere((element) => element.key == 'date', orElse: () => null);
+    date = entry.value;
+    print('date: ${entry.value}');
+
+    entry = msg.data.entries.firstWhere(
+        (element) => element.key == 'objectDetected',
+        orElse: () => null);
+    objectDetected = entry.value;
+    print('objectDetected: ${entry.value}');
+
+    entry = msg.data.entries.firstWhere(
+        (element) => element.key == 'urlImageDownload',
+        orElse: () => null);
+    urlImageDownload = entry.value;
+    print('urlImageDownload: ${entry.value}');
+
+    entry = msg.data.entries.firstWhere(
+        (element) => element.key == 'urlImageFirebase',
+        orElse: () => null);
+    urlImageFirebase = entry.value;
+    print('urlImageFirebase: ${entry.value}');
+
+    entry = msg.data.entries
+        .firstWhere((element) => element.key == 'id', orElse: () => null);
+    id = entry.value;
+    print('id: ${entry.value}');
+
+    textAlert = notification.body;
 
     String imageSavedPath =
-        await saveImage(data['urlImageFirebase'], data['id']);
+        await saveImage(urlImageDownload, id, urlImageFirebase);
 
-    print('alerts::imageSavedPath $imageSavedPath');
+    print('saveAlertDevice::imageSavedPath $imageSavedPath');
 
     final al = Alert(
-        id: data['id'],
-        cameraName: data['cameraName'],
-        regionName: data['regionName'],
-        date: data['date'],
-        objectDetected: data['objectDetected'],
-        textAlert: notification['body'],
-        urlImageDownload: data['urlImageDownload'],
-        urlImageFirebase: data['urlImageFirebase'],
+        id: id,
+        cameraName: cameraName,
+        regionName: regionName,
+        date: date,
+        objectDetected: objectDetected,
+        textAlert: textAlert,
+        urlImageDownload: urlImageDownload,
+        urlImageFirebase: urlImageFirebase,
         urlImageLocal: imageSavedPath);
 
     addAlert(al);

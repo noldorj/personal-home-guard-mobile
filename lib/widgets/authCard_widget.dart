@@ -72,6 +72,10 @@ class _AuthCardState extends State<AuthCard> {
     });
 
     if (auth.isAuth) {
+      print('');
+      print('authCard:: auth.token: ${auth.token}');
+      print('');
+
       Navigator.of(context).pushNamed(
         AppRoutes.APP_MANAGEMENT,
         arguments: 'email',

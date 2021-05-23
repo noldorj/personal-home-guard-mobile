@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:733818232650:android:d6a97be4fa5dd37df86bb3",
+        "android_client_info": {
+          "package_name": "br.com.portaovirtual.pv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733818232650-nni9f4t5itob6eodpgbjel388ivbf18f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn3PIaLy4_JOz2xdN9tnYOOlRYf1-guOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733818232650-nni9f4t5itob6eodpgbjel388ivbf18f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "733818232650-5r9esnvcqefbmripjq1laqjjqihj23ph.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pv.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:733818232650:android:8cf4c7e4fb32f7e4f86bb3",
         "android_client_info": {
           "package_name": "br.com.pv.app"
@@ -30,6 +66,13 @@
             {
               "client_id": "733818232650-nni9f4t5itob6eodpgbjel388ivbf18f.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "733818232650-5r9esnvcqefbmripjq1laqjjqihj23ph.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "br.com.pv.app"
+              }
             }
           ]
         }
