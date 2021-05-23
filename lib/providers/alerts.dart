@@ -43,7 +43,7 @@ class Alerts with ChangeNotifier {
   }
 
   Future<void> loadItemsAfterDate(DateTime date) async {
-    DateFormat format = new DateFormat("MM-dd-yyyy");
+    DateFormat format = new DateFormat("dd/MM/yyyy");
     //String newDate = format.parse(date.toIso8601String()).toString();
 
     print('alerts::loadItemsLastDate:: date: $date');
@@ -83,7 +83,7 @@ class Alerts with ChangeNotifier {
   Future<void> loadAllAlerts() async {
     final dataList = await DbUtil.getData('alerts');
     print('alerts::loadAllAlerts');
-    var format = DateFormat('dd-MM-yyyy');
+    var format = DateFormat('dd/MM/yyyy');
     var s = dataList.length;
     print('alerts::loadAllAlerts size datalist: $s');
 
@@ -108,7 +108,7 @@ class Alerts with ChangeNotifier {
   }
 
   Future<void> loadItemsByDate(DateTime date) async {
-    DateFormat format = new DateFormat("MM-dd-yyyy");
+    DateFormat format = new DateFormat("dd/MM/yyyy");
     //String newDate = format.parse(date.toIso8601String()).toString();
 
     print('loadItemsByDate:: date: $date');
@@ -242,7 +242,7 @@ class Alerts with ChangeNotifier {
   }
 
   void addAlert(Alert alert) {
-    DateFormat format = new DateFormat("MM-dd-yyyy");
+    DateFormat format = new DateFormat("dd/MM/yyyy");
 
     print('alerts::addAlert');
     var img = alert.urlImageLocal;

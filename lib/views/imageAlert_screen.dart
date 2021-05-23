@@ -9,7 +9,9 @@ class ImageAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     Alert alert = ModalRoute.of(context).settings.arguments;
     var image = new File(alert.urlImageLocal);
-    var date = alert.date;
+
+    var aux = alert.date.split('-');
+    var date = aux[1] + '/' + aux[0] + '/' + aux[2];
     var camera = alert.cameraName;
 
     return Scaffold(
