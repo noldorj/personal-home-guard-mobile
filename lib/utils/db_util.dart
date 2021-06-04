@@ -10,7 +10,7 @@ class DbUtil {
       onCreate: (db, version) {
         print('onCreate...');
         return db.execute(
-            'CREATE TABLE alerts (id TEXT PRIMARY KEY, cameraName TEXT, regionName TEXT, date INTEGER, objectDetected TEXT,  textAlert TEXT, urlImageFirebase TEXT, urlImageDownload TEXT, urlImageLocal TEXT)');
+            'CREATE TABLE alerts (id TEXT PRIMARY KEY, cameraName TEXT, regionName TEXT, date INTEGER, hour TEXT, objectDetected TEXT,  textAlert TEXT, urlImageFirebase TEXT, urlImageDownload TEXT, urlImageLocal TEXT)');
       },
       version: 1,
     );

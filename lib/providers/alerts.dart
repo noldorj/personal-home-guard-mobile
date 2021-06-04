@@ -62,6 +62,7 @@ class Alerts with ChangeNotifier {
             regionName: item['regionName'],
             date: format
                 .format(DateTime.fromMillisecondsSinceEpoch(item['date'])),
+            hour: item['hour'],
             objectDetected: item['objectDetected'],
             textAlert: item['textAlert'],
             urlImageFirebase: item['urlImageFirebase'],
@@ -95,6 +96,7 @@ class Alerts with ChangeNotifier {
             regionName: item['regionName'],
             date: format
                 .format(DateTime.fromMillisecondsSinceEpoch(item['date'])),
+            hour: item['hour'],
             objectDetected: item['objectDetected'],
             textAlert: item['textAlert'],
             urlImageFirebase: item['urlImageFirebase'],
@@ -126,6 +128,7 @@ class Alerts with ChangeNotifier {
             regionName: item['regionName'],
             date: format
                 .format(DateTime.fromMillisecondsSinceEpoch(item['date'])),
+            hour: item['hour'],
             objectDetected: item['objectDetected'],
             textAlert: item['textAlert'],
             urlImageFirebase: item['urlImageFirebase'],
@@ -175,6 +178,7 @@ class Alerts with ChangeNotifier {
         id,
         regionName,
         date,
+        hour,
         objectDetected,
         textAlert,
         urlImageDownload,
@@ -196,6 +200,11 @@ class Alerts with ChangeNotifier {
         .firstWhere((element) => element.key == 'date', orElse: () => null);
     date = entry.value;
     print('date: ${entry.value}');
+
+    entry = msg.data.entries
+        .firstWhere((element) => element.key == 'hour', orElse: () => null);
+    hour = entry.value;
+    print('hour: ${entry.value}');
 
     entry = msg.data.entries.firstWhere(
         (element) => element.key == 'objectDetected',
@@ -232,6 +241,7 @@ class Alerts with ChangeNotifier {
         cameraName: cameraName,
         regionName: regionName,
         date: date,
+        hour: hour,
         objectDetected: objectDetected,
         textAlert: textAlert,
         urlImageDownload: urlImageDownload,
@@ -250,8 +260,8 @@ class Alerts with ChangeNotifier {
 
     var date = alert.date;
     print('alerts::addAlert:: alert.date: $date');
-    date = date.replaceAll('/', '-');
-    print('alerts::addAlert:: date replaced: $date');
+    //date = date.replaceAll('/', '-');
+    //print('alerts::addAlert:: date replaced: $date');
 
     int dateMill = format.parse(date).millisecondsSinceEpoch;
 
@@ -265,6 +275,7 @@ class Alerts with ChangeNotifier {
         "cameraName": alert.cameraName,
         "regionName": alert.regionName,
         "date": dateMill,
+        "hour": alert.hour,
         "objectDetected": alert.objectDetected,
         "textAlert": alert.textAlert,
         "urlImageFirebase": alert.urlImageFirebase,

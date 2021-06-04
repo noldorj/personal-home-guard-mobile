@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:pv/providers/alerts.dart';
 import 'package:pv/widgets/authCard_widget.dart';
@@ -13,7 +14,7 @@ class FormLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     final alerts = Provider.of<Alerts>(context, listen: false);
     if (msg != null) {
-      print('Message received at loginScreen: ${msg.notification.title}');
+      //print('Message received at loginScreen: ${msg.notification.title}');
       alerts.saveAlertDevice(msg);
     }
 
@@ -34,12 +35,14 @@ class FormLogin extends StatelessWidget {
           ),
           Expanded(
             flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                AuthCard(),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  AuthCard(),
+                ],
+              ),
             ),
           ),
         ],
@@ -47,16 +50,7 @@ class FormLogin extends StatelessWidget {
       bottomNavigationBar: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          TextButton(
-            child: Text('Esqueci a senha'),
-            onPressed: () => {print('Esque a senha')},
-          ),
-          TextButton(
-            child: Text('Suporte'),
-            onPressed: () => {print('Suporte')},
-          ),
-        ],
+        children: <Widget>[],
       ),
     );
   }

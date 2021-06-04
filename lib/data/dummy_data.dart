@@ -7,6 +7,7 @@ final ALERTS_DUMMY = [
       regionName: 'garagem',
       date: '03/31/2021',
       objectDetected: 'Pessoa',
+      hour: '13:12:33',
       textAlert:
           'Pessoa detectado na Garagem - Cam: Cam_Garagem as 15:30 - 08/03/2021',
       urlImageDownload:

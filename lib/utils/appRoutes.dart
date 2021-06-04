@@ -1,5 +1,6 @@
 class AppRoutes {
   static const HOME = '/';
+  static const LOGIN = '/form-login';
   static const APP_MANAGEMENT = '/app-management';
   static const CAM_ALIVE = '/cam-alive';
   static const PV_STATUS = '/pv-status';

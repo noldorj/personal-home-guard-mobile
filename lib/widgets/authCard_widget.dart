@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pv/exceptions/auth_exception.dart';
 import 'package:pv/utils/appRoutes.dart';
 import '../providers/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 enum AuthMode { Login }
 
@@ -14,6 +15,52 @@ class AuthCard extends StatefulWidget {
 
 class _AuthCardState extends State<AuthCard> {
   final _passwordController = TextEditingController();
+
+  final _auth = FirebaseAuth.instance;
+
+  Future<void> sendPasswordResetEmail(String email) async {
+    Future<void> ret;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    _form.currentState.save();
+
+    if (email.isEmpty) {
+      _showErrorDialog('Campo "Email" está vazio ! ');
+      setState(() {
+        _isLoading = false;
+      });
+    } else if (!email.contains('@')) {
+      _showErrorDialog('Informe um Email válido !');
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      print('sendPasswordResetEmail: $email');
+
+      try {
+        await _auth.sendPasswordResetEmail(email: email);
+
+        setState(() {
+          _isLoading = false;
+        });
+        _showErrorDialog('Cheque seu email para resetar a senha !');
+      } on AuthException catch (error) {
+        setState(() {
+          _isLoading = false;
+        });
+        _showErrorDialog(error.toString());
+      } catch (error) {
+        _showErrorDialog("Ocorreu um erro inesperado!");
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+    return ret;
+  }
 
   final Map<String, String> _authData = {
     'email': '',
@@ -91,7 +138,7 @@ class _AuthCardState extends State<AuthCard> {
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
-        height: 270,
+        height: deviceSize.height * 0.40,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(10.0),
         child: Form(
@@ -131,11 +178,15 @@ class _AuthCardState extends State<AuthCard> {
                   child: ElevatedButton(
                     child: Text('Entrar'),
                     style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(5.0),
+                      elevation: MaterialStateProperty.all(4.0),
                     ),
                     onPressed: _btnLogin,
                   ),
                 ),
+              TextButton(
+                child: Text('Esqueci / Resetar a senha'),
+                onPressed: () => sendPasswordResetEmail(_authData['email']),
+              ),
             ],
           ),
         ),

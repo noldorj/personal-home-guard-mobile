@@ -43,6 +43,7 @@ class Store {
             cameraName: al["cameraName"],
             regionName: al["regionName"],
             date: al["date"],
+            hour: al["hour"],
             objectDetected: al["objectDetected"],
             textAlert: al["textAlert"],
             urlImageDownload: al["urlImageDownload"],

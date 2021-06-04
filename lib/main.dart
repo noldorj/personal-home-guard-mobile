@@ -1,9 +1,11 @@
 //import 'dart:js';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pv/views/auth_home_screen.dart';
 
 import 'views/login_screen.dart';
 import 'views/mainManagement_screen.dart';
@@ -51,9 +53,10 @@ class PvApp extends StatelessWidget {
       child: MaterialApp(
         //home: FormLogin());
         routes: {
-          AppRoutes.HOME: (ctx) => FormLogin(messageReceived),
-          AppRoutes.APP_MANAGEMENT: (ctx) => MainManagement(messageReceived),
+          AppRoutes.HOME: (ctx) => AuthOrHomeScreen(messageReceived),
+          AppRoutes.APP_MANAGEMENT: (ctx) => MainManagement(),
           AppRoutes.IMAGE_ALERT: (ctx) => ImageAlert(),
+          AppRoutes.LOGIN: (ctx) => FormLogin(new RemoteMessage()),
         },
       ),
     );

@@ -5,6 +5,7 @@ class Alert {
   final String cameraName;
   final String regionName;
   final String date;
+  final String hour;
   final String objectDetected;
   final String textAlert;
   final String urlImageFirebase;
@@ -16,6 +17,7 @@ class Alert {
     @required this.cameraName,
     @required this.regionName,
     @required this.date,
+    @required this.hour,
     @required this.objectDetected,
     @required this.textAlert,
     @required this.urlImageFirebase,

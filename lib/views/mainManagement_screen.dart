@@ -9,19 +9,17 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:pv/utils/appRoutes.dart';
+//import 'package:pv/utils/db_util.dart';
+import 'package:pv/widgets/drawer_configuracoes_sair.dart';
 
 import '../providers/alerts.dart';
 
 class MainManagement extends StatefulWidget {
-  MainManagement(RemoteMessage messageReceived);
-
   @override
-  _MainManagementState createState() => _MainManagementState(RemoteMessage);
+  _MainManagementState createState() => _MainManagementState();
 }
 
 class _MainManagementState extends State<MainManagement> {
-  _MainManagementState(msg);
-
   DateTime _selectedDate, _yesterday, _today, _weekPeriod, _monthPeriod;
 
   FlutterLocalNotificationsPlugin fltNotification;
@@ -77,11 +75,12 @@ class _MainManagementState extends State<MainManagement> {
 
       alerts.saveAlertDevice(message);
 
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification.android;
+      //RemoteNotification notification = message.notification;
+      // AndroidNotification android = message.notification.android;
 
       // If `onMessage` is triggered with a notification, construct our own
       // local notification to show to users using the created channel.
+      /*
       if (notification != null && android != null) {
         await fltNotification.show(
             notification.hashCode,
@@ -92,11 +91,11 @@ class _MainManagementState extends State<MainManagement> {
                 channel.id,
                 channel.name,
                 channel.description,
-                icon: android?.smallIcon,
                 // other properties...
               ),
             ));
       }
+      */
 
       showNotification(message);
     });
@@ -120,7 +119,7 @@ class _MainManagementState extends State<MainManagement> {
       channel.description,
     );
 
-    print('Channel name: ${androidDetails.channelName}');
+    //print('Channel name: ${androidDetails.channelName}');
 
     var iosDetails = IOSNotificationDetails();
 
@@ -177,21 +176,11 @@ class _MainManagementState extends State<MainManagement> {
         title: Text('PV 1.0 - Gerenciador'),
         centerTitle: true,
       ),
+      drawer: Drawer(
+        child: AppDrawer(),
+      ),
       body: Column(
         children: [
-          // BOTOES ALERTAS, AO-VIVO, STATUS
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                  onPressed: () => alertActions.loadItemsTest(),
-                  child: Text('Alertas')),
-              TextButton(
-                  onPressed: () => print('ao vivo '), child: Text('Ao vivo')),
-              TextButton(
-                  onPressed: () => print('Status '), child: Text('Status')),
-            ],
-          ),
           // COLUNA COM MODAL de "CALENDARIO"
           Column(
             children: [
@@ -274,7 +263,9 @@ class _MainManagementState extends State<MainManagement> {
                                       ),
                                     ),
                                   ),
-                                  title: Text(listAlerts.itemByIndex(i).date),
+                                  title: Text(listAlerts.itemByIndex(i).date +
+                                      ' - ' +
+                                      listAlerts.itemByIndex(i).hour),
                                   subtitle: Row(children: [
                                     Column(
                                       children: [
