@@ -14,12 +14,32 @@ class Auth with ChangeNotifier {
   String _token;
   DateTime _expiryDate;
   Timer _logoutTimer;
+  bool _logged = false;
+
+  Future<void> isLogged() async {
+    //print('keepLooged: ${await Store.getString('keepLogged')}');
+    if (await Store.getString('keepLogged') == 'true') {
+      _logged = true;
+      //print('isLogged true');
+    } else {
+      //print('isLogged false');
+      _logged = false;
+    }
+  }
 
   bool get isAuth {
-    return token != null;
+    isLogged();
+    if (_logged) {
+      //print('get isAuth: $_logged');
+      return true;
+    } else {
+      //print('get isAuth: token != null');
+      return token != null;
+    }
   }
 
   String get userId {
+    isLogged();
     return isAuth ? _userId : null;
   }
 
@@ -50,7 +70,7 @@ class Auth with ChangeNotifier {
 
     final responseBody = json.decode(response.body);
 
-    print(responseBody);
+    //print(responseBody);
 
     if (responseBody["error"] != null) {
       throw AuthException(responseBody['error']['message']);
@@ -70,6 +90,12 @@ class Auth with ChangeNotifier {
         body: null,
       ); */
 
+      if (await Store.getString('rememberLogin') == 'true') {
+        Store.saveString('keepLogged', 'true');
+      } else {
+        Store.saveString('keepLogged', 'false');
+      }
+
       Store.saveMap('userData', {
         "token": _token,
         "userId": _userId,
@@ -77,7 +103,7 @@ class Auth with ChangeNotifier {
       });
 
       String topic = email.replaceAll("@", ".");
-      print("Topic: $topic");
+      //print("Topic: $topic");
       await FirebaseMessaging.instance.subscribeToTopic(topic);
 
       _autoLogout();
@@ -91,27 +117,32 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> tryAutoLogin() async {
+    //print('tryAutologin()');
+    isLogged();
+
     if (isAuth) {
+      //print('autoLogin _logged: $_logged');
       return Future.value();
+    } else {
+      final userData = await Store.getMap('userData');
+      if (userData == null) {
+        return Future.value();
+      }
+
+      final expiryDate = DateTime.parse(userData["expiryDate"]);
+
+      if (expiryDate.isBefore(DateTime.now())) {
+        return Future.value();
+      }
+
+      _userId = userData["userId"];
+      _token = userData["token"];
+      _expiryDate = expiryDate;
+
+      _autoLogout();
+      //logout();
+      notifyListeners();
     }
-
-    final userData = await Store.getMap('userData');
-    if (userData == null) {
-      return Future.value();
-    }
-
-    final expiryDate = DateTime.parse(userData["expiryDate"]);
-
-    if (expiryDate.isBefore(DateTime.now())) {
-      return Future.value();
-    }
-
-    _userId = userData["userId"];
-    _token = userData["token"];
-    _expiryDate = expiryDate;
-
-    _autoLogout();
-    notifyListeners();
     return Future.value();
   }
 
@@ -124,11 +155,16 @@ class Auth with ChangeNotifier {
       _logoutTimer = null;
     }
     Store.remove('userData');
+    Store.saveString('keepLogged', 'false');
+    Store.saveString('rememberLogin', 'false');
+    isLogged();
     notifyListeners();
   }
 
   void _autoLogout() {
+    //print('_autoLogout');
     if (_logoutTimer != null) {
+      //print('_logoutTimer.cancel');
       _logoutTimer.cancel();
     }
     final timeToLogout = _expiryDate.difference(DateTime.now()).inSeconds;

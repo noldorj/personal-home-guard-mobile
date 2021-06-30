@@ -13,9 +13,10 @@ class FormLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final alerts = Provider.of<Alerts>(context, listen: false);
-    if (msg != null) {
-      //print('Message received at loginScreen: ${msg.notification.title}');
-      alerts.saveAlertDevice(msg);
+    if (this.msg != null) {
+      print(
+          'FormLogin::build - Message received at loginScreen: ${this.msg.notification.title}');
+      alerts.saveAlertDevice(this.msg);
     }
 
     return Scaffold(

@@ -8,7 +8,7 @@ class DbUtil {
     return sql.openDatabase(
       path.join(dbPath, 'alerts.db'),
       onCreate: (db, version) {
-        print('onCreate...');
+        //print('onCreate...');
         return db.execute(
             'CREATE TABLE alerts (id TEXT PRIMARY KEY, cameraName TEXT, regionName TEXT, date INTEGER, hour TEXT, objectDetected TEXT,  textAlert TEXT, urlImageFirebase TEXT, urlImageDownload TEXT, urlImageLocal TEXT)');
       },
@@ -19,7 +19,7 @@ class DbUtil {
   static Future<void> deleteDatabase() async {
     final dbPath = await sql.getDatabasesPath();
     await sql.deleteDatabase(path.join(dbPath, 'alerts.db'));
-    print('deleteDatabase');
+    //print('deleteDatabase');
   }
 
   static Future<void> deleteAll() async {
@@ -28,14 +28,14 @@ class DbUtil {
 
     // Remove the Dog from the Database.
     await db.delete('alerts');
-    print('deleleteAll...');
+    //print('deleleteAll...');
   }
 
   static Future<void> deleteAlert(String id) async {
     // Get a reference to the database.
     final db = await DbUtil.database();
 
-    print('deleteAlert:: id: $id');
+    //print('deleteAlert:: id: $id');
 
     // Remove the Dog from the Database.
     await db.delete(
@@ -48,7 +48,7 @@ class DbUtil {
   }
 
   static Future<void> insert(String table, Map<String, Object> data) async {
-    print('db_util::insert');
+    //print('db_util::insert');
     final db = await DbUtil.database();
     await db.insert(
       table,
@@ -66,7 +66,7 @@ class DbUtil {
 
     int dateMill = format.parse(newDate).millisecondsSinceEpoch;
 
-    print('db_util::getAlertByDate date: $newDate');
+    //print('db_util::getAlertByDate date: $newDate');
 
     return db.query('alerts', where: "date = ?", whereArgs: [dateMill]);
   }
@@ -79,7 +79,7 @@ class DbUtil {
     var newDate = format.format(date);
     int dateMill = format.parse(newDate).millisecondsSinceEpoch;
 
-    print('db_util::getAlertAfterDate date: $newDate');
+    //print('db_util::getAlertAfterDate date: $newDate');
 
     return db.query('alerts', where: "date >= ? ", whereArgs: [dateMill]);
   }

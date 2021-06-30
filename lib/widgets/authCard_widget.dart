@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pv/data/saveData.dart';
 import 'package:pv/exceptions/auth_exception.dart';
 import 'package:pv/utils/appRoutes.dart';
 import '../providers/auth.dart';
@@ -15,6 +16,7 @@ class AuthCard extends StatefulWidget {
 
 class _AuthCardState extends State<AuthCard> {
   final _passwordController = TextEditingController();
+  bool _checkAutoLogin = false;
 
   final _auth = FirebaseAuth.instance;
 
@@ -38,7 +40,7 @@ class _AuthCardState extends State<AuthCard> {
         _isLoading = false;
       });
     } else {
-      print('sendPasswordResetEmail: $email');
+      //print('sendPasswordResetEmail: $email');
 
       try {
         await _auth.sendPasswordResetEmail(email: email);
@@ -103,14 +105,12 @@ class _AuthCardState extends State<AuthCard> {
     Auth auth = Provider.of(context, listen: false);
 
     try {
-      print(_authData['email']);
-      print(_authData['password']);
       await auth.login(_authData["email"], _authData["password"]);
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {
-      print('try catch error:');
-      print(error);
+      //print('try catch error:');
+      //print(error);
       _showErrorDialog("Ocorreu um erro inesperado!");
     }
 
@@ -119,10 +119,6 @@ class _AuthCardState extends State<AuthCard> {
     });
 
     if (auth.isAuth) {
-      print('');
-      print('authCard:: auth.token: ${auth.token}');
-      print('');
-
       Navigator.of(context).pushNamed(
         AppRoutes.APP_MANAGEMENT,
         arguments: 'email',
@@ -138,7 +134,7 @@ class _AuthCardState extends State<AuthCard> {
       elevation: 5.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       child: Container(
-        height: deviceSize.height * 0.40,
+        height: deviceSize.height * 0.44,
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(10.0),
         child: Form(
@@ -183,10 +179,30 @@ class _AuthCardState extends State<AuthCard> {
                     onPressed: _btnLogin,
                   ),
                 ),
-              TextButton(
-                child: Text('Esqueci / Resetar a senha'),
-                onPressed: () => sendPasswordResetEmail(_authData['email']),
-              ),
+              SwitchListTile(
+                  title: Text("Manter logado"),
+                  inactiveTrackColor: Colors.grey,
+                  value: _checkAutoLogin,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  onChanged: (bool newValue) {
+                    setState(() {
+                      _checkAutoLogin = newValue;
+                    });
+
+                    if (_checkAutoLogin) {
+                      Store.saveString('rememberLogin', 'true');
+                      print('_checkAutoLogin true');
+                    } else {
+                      Store.saveString('rememberLogin', 'false');
+                      print('_checkAutoLogin false');
+                    }
+                  }),
+              Card(
+                child: TextButton(
+                  child: Text('Esqueci / Resetar a senha'),
+                  onPressed: () => sendPasswordResetEmail(_authData['email']),
+                ),
+              )
             ],
           ),
         ),

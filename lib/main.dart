@@ -24,16 +24,17 @@ void main() async {
 
   runApp(PvApp());
 }
-
+/*
 class MessageAsArgument {
   final RemoteMessage msg;
 
   MessageAsArgument(this.msg);
 }
+*/
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("Handling a background message: ${message.messageId}");
+  //print(      "_firebaseMessagingBackgroundHandler:: Handling a background message: ${message.messageId}");
   messageReceived = message;
   main();
 }
@@ -54,7 +55,7 @@ class PvApp extends StatelessWidget {
         //home: FormLogin());
         routes: {
           AppRoutes.HOME: (ctx) => AuthOrHomeScreen(messageReceived),
-          AppRoutes.APP_MANAGEMENT: (ctx) => MainManagement(),
+          AppRoutes.APP_MANAGEMENT: (ctx) => MainManagement(messageReceived),
           AppRoutes.IMAGE_ALERT: (ctx) => ImageAlert(),
           AppRoutes.LOGIN: (ctx) => FormLogin(new RemoteMessage()),
         },

@@ -1,5 +1,6 @@
-import '../providers/alert.dart';
+//import '../providers/alert.dart';
 
+/*
 final ALERTS_DUMMY = [
   Alert(
       id: '03-31-2021-10-43-01',
@@ -112,3 +113,4 @@ final ALERTS_DUMMY = [
       urlImageLocal: ''),
  */
 ];
+*/

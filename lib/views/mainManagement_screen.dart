@@ -15,11 +15,19 @@ import 'package:pv/widgets/drawer_configuracoes_sair.dart';
 import '../providers/alerts.dart';
 
 class MainManagement extends StatefulWidget {
+  final RemoteMessage msg;
+
   @override
-  _MainManagementState createState() => _MainManagementState();
+  _MainManagementState createState() => _MainManagementState(this.msg);
+
+  MainManagement(this.msg);
 }
 
 class _MainManagementState extends State<MainManagement> {
+  final RemoteMessage msg;
+
+  _MainManagementState(this.msg);
+
   DateTime _selectedDate, _yesterday, _today, _weekPeriod, _monthPeriod;
 
   FlutterLocalNotificationsPlugin fltNotification;
@@ -30,6 +38,11 @@ class _MainManagementState extends State<MainManagement> {
     'High Importance Notifications', // title
     'This channel is used for important notifications.', // description
     importance: Importance.max,
+    playSound: true,
+    enableVibration: true,
+    enableLights: true,
+    showBadge: true,
+    ledColor: Colors.lightBlue,
   );
 
   @override
@@ -40,16 +53,20 @@ class _MainManagementState extends State<MainManagement> {
     super.initState();
   }
 
+  /*
   void getToken() async {
     var token = await messaging.getToken();
 
     print('getToken:: Token: $token');
   }
+  */
 
+  /*
   void handleMsgFromBackground(msg) async {
     final alerts = Provider.of<Alerts>(context, listen: false);
     alerts.saveAlertDevice(msg);
   }
+  */
 
   void initMessaging() async {
     var androiInit = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -117,6 +134,13 @@ class _MainManagementState extends State<MainManagement> {
       channel.id,
       channel.name,
       channel.description,
+      importance: Importance.max,
+      playSound: true,
+      enableVibration: true,
+      enableLights: true,
+      channelShowBadge: true,
+      ledColor: Colors.lightBlue,
+      priority: Priority.high,
     );
 
     //print('Channel name: ${androidDetails.channelName}');
@@ -134,15 +158,14 @@ class _MainManagementState extends State<MainManagement> {
   void notitficationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
-      announcement: false,
+      announcement: true,
       badge: true,
       carPlay: false,
-      criticalAlert: false,
+      criticalAlert: true,
       provisional: false,
       sound: true,
     );
-    print(
-        'notitficationPermission:: seetings: ${settings.authorizationStatus}');
+    //print(        'notitficationPermission:: seetings: ${settings.authorizationStatus}');
   }
 
   _showDatePicker() {
@@ -168,12 +191,24 @@ class _MainManagementState extends State<MainManagement> {
   Widget build(BuildContext context) {
     final Alerts alertActions = Provider.of<Alerts>(context, listen: false);
 
+    if (this.msg != null) {
+      //print('_MainManagementState::build - Message received at loginScreen: ${this.msg.notification.title}');
+      alertActions.saveAlertDevice(this.msg);
+      //alertActions.loadItemsByDate(DateTime.now());
+    }
+    /*
+    setState(() {
+      alertActions.loadItemsByDate(DateTime.now());
+      alertActions.loadAllAlerts();
+    });
+    */
+
     //DbUtil.deleteDatabase();
     //DbUtil.deleteAll();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('PV 1.0 - Gerenciador'),
+        title: Text('Portão Virtual - Gerenciador'),
         centerTitle: true,
       ),
       drawer: Drawer(
@@ -195,7 +230,7 @@ class _MainManagementState extends State<MainManagement> {
                       onPressed: () => {
                             _today = DateTime.now(),
                             alertActions.loadItemsByDate(_today),
-                            print('_today: $_today')
+                            //print('_today: $_today')
                           },
                       child: Text('Hoje')),
                   TextButton(
@@ -203,14 +238,14 @@ class _MainManagementState extends State<MainManagement> {
                             _yesterday =
                                 DateTime.now().subtract(Duration(days: 1)),
                             alertActions.loadItemsByDate(_yesterday),
-                            print('_yesterday: $_yesterday')
+                            //print('_yesterday: $_yesterday')
                           },
                       child: Text('Ontem')),
                   TextButton(
                     onPressed: () => {
                       _weekPeriod = DateTime.now().subtract(Duration(days: 7)),
                       alertActions.loadItemsAfterDate(_weekPeriod),
-                      print('weekPeriod: $_weekPeriod')
+                      //print('weekPeriod: $_weekPeriod')
                     },
                     child: Text('Da semana'),
                   ),
@@ -219,13 +254,12 @@ class _MainManagementState extends State<MainManagement> {
                       _monthPeriod =
                           DateTime.now().subtract(Duration(days: 30)),
                       alertActions.loadItemsAfterDate(_monthPeriod),
-                      print('_monthPeriod: $_monthPeriod')
+                      //print('_monthPeriod: $_monthPeriod')
                     },
                     child: Text('Do Mês'),
                   ),
                   TextButton(
-                    onPressed: () =>
-                        {alertActions.loadAllAlerts(), print('todos')},
+                    onPressed: () => {alertActions.loadAllAlerts()},
                     child: Text('Todos'),
                   ),
                 ],

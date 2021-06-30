@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import 'package:pv/data/dummy_data.dart';
+//import 'package:pv/data/dummy_data.dart';
 import '../utils/db_util.dart';
 import 'dart:async';
 import '../utils/saveImage.dart';
@@ -27,6 +27,7 @@ class Alerts with ChangeNotifier {
   }
   List<Alert> _items = [];
 
+  /*
   void loadItemsTest() async {
     print('alerts::loadItemsTest');
     for (Alert item in ALERTS_DUMMY) {
@@ -41,18 +42,19 @@ class Alerts with ChangeNotifier {
       notifyListeners();
     }
   }
+  */
 
   Future<void> loadItemsAfterDate(DateTime date) async {
     DateFormat format = new DateFormat("dd/MM/yyyy");
     //String newDate = format.parse(date.toIso8601String()).toString();
 
-    print('alerts::loadItemsLastDate:: date: $date');
+    //print('alerts::loadItemsLastDate:: date: $date');
     //print('loadItemsLastDate:: newDate: $newDate');
 
     final dataList = await DbUtil.getAlertAfterDate(date);
     var size = dataList.length;
 
-    print('alerts::loadItemsAfterDate size datalist: $size');
+    //print('alerts::loadItemsAfterDate size datalist: $size');
 
     _items = dataList
         .map(
@@ -76,17 +78,17 @@ class Alerts with ChangeNotifier {
   }
 
   Future<void> loadItems() async {
-    print('alerts::loadItems');
+    //print('alerts::loadItems');
     _items = _items;
-    notifyListeners();
+    //notifyListeners();
   }
 
   Future<void> loadAllAlerts() async {
     final dataList = await DbUtil.getData('alerts');
-    print('alerts::loadAllAlerts');
+    //print('alerts::loadAllAlerts');
     var format = DateFormat('dd/MM/yyyy');
     var s = dataList.length;
-    print('alerts::loadAllAlerts size datalist: $s');
+    //print('alerts::loadAllAlerts size datalist: $s');
 
     _items = dataList
         .map(
@@ -113,12 +115,12 @@ class Alerts with ChangeNotifier {
     DateFormat format = new DateFormat("dd/MM/yyyy");
     //String newDate = format.parse(date.toIso8601String()).toString();
 
-    print('loadItemsByDate:: date: $date');
+    //print('loadItemsByDate:: date: $date');
     //print('loadItemsLastDate:: newDate: $newDate');
 
     final dataList = await DbUtil.getAlertByDate(date);
     final size = dataList.length;
-    print('loadItemsByDate dataList size: $size');
+    //print('loadItemsByDate dataList size: $size');
 
     _items = dataList
         .map(
@@ -151,10 +153,10 @@ class Alerts with ChangeNotifier {
   }
 
   void deleteAll() {
-    print('alerts::deleteAll');
+    //print('alerts::deleteAll');
     DbUtil.deleteAll();
     this.loadAllAlerts();
-    notifyListeners();
+    //notifyListeners();
   }
 
   Alert itemByIndex(int index) {
@@ -162,17 +164,16 @@ class Alerts with ChangeNotifier {
   }
 
   void deleteById(String id) async {
-    print('delteById: $id');
+    //print('delteById: $id');
     DbUtil.deleteAlert(id);
     this.loadAllAlerts();
-    notifyListeners();
+    //notifyListeners();
   }
 
   Future<void> saveAlertDevice(RemoteMessage msg) async {
     final RemoteNotification notification = msg.notification;
 
-    print('::saveAlertDevice');
-    print('');
+    //print('::saveAlertDevice');
 
     var cameraName,
         id,
@@ -187,54 +188,55 @@ class Alerts with ChangeNotifier {
     MapEntry entry = msg.data.entries.firstWhere(
         (element) => element.key == 'regionName',
         orElse: () => null);
+
     regionName = entry.value;
-    print('regionName: ${entry.value}');
+    //print('regionName: ${entry.value}');
 
     entry = msg.data.entries.firstWhere(
         (element) => element.key == 'cameraName',
         orElse: () => null);
     cameraName = entry.value;
-    print('cameraName: ${entry.value}');
+    //print('cameraName: ${entry.value}');
 
     entry = msg.data.entries
         .firstWhere((element) => element.key == 'date', orElse: () => null);
     date = entry.value;
-    print('date: ${entry.value}');
+    //print('date: ${entry.value}');
 
     entry = msg.data.entries
         .firstWhere((element) => element.key == 'hour', orElse: () => null);
     hour = entry.value;
-    print('hour: ${entry.value}');
+    //print('hour: ${entry.value}');
 
     entry = msg.data.entries.firstWhere(
         (element) => element.key == 'objectDetected',
         orElse: () => null);
     objectDetected = entry.value;
-    print('objectDetected: ${entry.value}');
+    //print('objectDetected: ${entry.value}');
 
     entry = msg.data.entries.firstWhere(
         (element) => element.key == 'urlImageDownload',
         orElse: () => null);
     urlImageDownload = entry.value;
-    print('urlImageDownload: ${entry.value}');
+    //print('urlImageDownload: ${entry.value}');
 
     entry = msg.data.entries.firstWhere(
         (element) => element.key == 'urlImageFirebase',
         orElse: () => null);
     urlImageFirebase = entry.value;
-    print('urlImageFirebase: ${entry.value}');
+    //print('urlImageFirebase: ${entry.value}');
 
     entry = msg.data.entries
         .firstWhere((element) => element.key == 'id', orElse: () => null);
     id = entry.value;
-    print('id: ${entry.value}');
+    //print('id: ${entry.value}');
 
     textAlert = notification.body;
 
     String imageSavedPath =
         await saveImage(urlImageDownload, id, urlImageFirebase);
 
-    print('saveAlertDevice::imageSavedPath $imageSavedPath');
+    //print('saveAlertDevice::imageSavedPath $imageSavedPath');
 
     final al = Alert(
         id: id,
@@ -254,20 +256,20 @@ class Alerts with ChangeNotifier {
   void addAlert(Alert alert) {
     DateFormat format = new DateFormat("dd/MM/yyyy");
 
-    print('alerts::addAlert');
-    var img = alert.urlImageLocal;
-    print('alerts::addAlert:: urlImageLocal: $img');
+    //print('alerts::addAlert');
+    //var img = alert.urlImageLocal;
+    //print('alerts::addAlert:: urlImageLocal: $img');
 
     var date = alert.date;
-    print('alerts::addAlert:: alert.date: $date');
+    //print('alerts::addAlert:: alert.date: $date');
     //date = date.replaceAll('/', '-');
     //print('alerts::addAlert:: date replaced: $date');
 
     int dateMill = format.parse(date).millisecondsSinceEpoch;
 
     date = dateMill.toString();
-    print('alerts::addAlert:: dateMill: $dateMill');
-    print(' ');
+    //print('alerts::addAlert:: dateMill: $dateMill');
+    //print(' ');
 
     try {
       DbUtil.insert('alerts', {

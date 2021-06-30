@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+//import 'package:pv/providers/alerts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/alert.dart';
@@ -16,6 +17,7 @@ class Store {
 
   static Future<String> getString(String key) async {
     final prefs = await SharedPreferences.getInstance();
+    //print('getString: ${prefs.getString(key)}');
     return prefs.getString(key);
   }
 
@@ -55,11 +57,9 @@ class Store {
         }
         return alerts;
       } else {
-        print('getListItems return null');
         return alerts;
       }
     } catch (_) {
-      print('getListItems return null');
       return null;
     }
   }
