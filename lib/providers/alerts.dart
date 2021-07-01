@@ -52,7 +52,7 @@ class Alerts with ChangeNotifier {
     //print('loadItemsLastDate:: newDate: $newDate');
 
     final dataList = await DbUtil.getAlertAfterDate(date);
-    var size = dataList.length;
+    //var size = dataList.length;
 
     //print('alerts::loadItemsAfterDate size datalist: $size');
 
@@ -77,6 +77,59 @@ class Alerts with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadItemsByPeriod(String period) async {
+    DateFormat format = new DateFormat("dd/MM/yyyy");
+    //String newDate = format.parse(date.toIso8601String()).toString();
+
+    //print('alerts::loadItemsByPeriod:: hour: $hour');
+    //print('loadItemsLastDate:: newDate: $newDate');
+
+    List<Alert> dataList = [];
+
+    /*
+    if (period == 'manha') {
+      dataList = await DbUtil.getAlertByPeriod(period);
+    }
+    */
+    TimeOfDay hourParse;
+    _items.forEach((element) {
+      //print('element: ${element.hour}');
+      hourParse = TimeOfDay(
+          hour: int.parse(element.hour.substring(0, 2)),
+          minute: int.parse(element.hour.substring(3, 5)));
+
+      if (period == 'manha') {
+        //print('manha parsed: ${hourParse.toString()}');
+        if (hourParse.hour >= 6 && hourParse.hour < 12) {
+          dataList.add(element);
+        }
+      } else if (period == 'tarde') {
+        //print('tarde parsed: ${hourParse.toString()}');
+        if (hourParse.hour >= 12 && hourParse.hour < 18) {
+          dataList.add(element);
+        }
+      } else if (period == 'noite') {
+        //print('noite parsed: ${hourParse.toString()}');
+        if (hourParse.hour >= 18 && hourParse.hour < 24) {
+          dataList.add(element);
+        }
+      } else if (period == 'madrugada') {
+        //print('madrugada parsed: ${hourParse.toString()}');
+        if (hourParse.hour >= 0 && hourParse.hour < 6) {
+          dataList.add(element);
+        }
+      }
+    });
+
+    //var size = dataList.length;
+
+    //print('alerts::loadItemsAfterDate size datalist: $size');
+
+    _items = dataList;
+
+    notifyListeners();
+  }
+
   Future<void> loadItems() async {
     //print('alerts::loadItems');
     _items = _items;
@@ -87,7 +140,7 @@ class Alerts with ChangeNotifier {
     final dataList = await DbUtil.getData('alerts');
     //print('alerts::loadAllAlerts');
     var format = DateFormat('dd/MM/yyyy');
-    var s = dataList.length;
+    //var s = dataList.length;
     //print('alerts::loadAllAlerts size datalist: $s');
 
     _items = dataList
@@ -119,7 +172,7 @@ class Alerts with ChangeNotifier {
     //print('loadItemsLastDate:: newDate: $newDate');
 
     final dataList = await DbUtil.getAlertByDate(date);
-    final size = dataList.length;
+    //final size = dataList.length;
     //print('loadItemsByDate dataList size: $size');
 
     _items = dataList
@@ -150,17 +203,19 @@ class Alerts with ChangeNotifier {
 
   int get itemsCount {
     return _items.length;
+    //notifyListeners();
   }
 
   void deleteAll() {
     //print('alerts::deleteAll');
     DbUtil.deleteAll();
     this.loadAllAlerts();
-    //notifyListeners();
+    notifyListeners();
   }
 
   Alert itemByIndex(int index) {
     return _items[index];
+    //notifyListeners();
   }
 
   void deleteById(String id) async {

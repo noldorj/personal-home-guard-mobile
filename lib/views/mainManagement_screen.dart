@@ -53,21 +53,6 @@ class _MainManagementState extends State<MainManagement> {
     super.initState();
   }
 
-  /*
-  void getToken() async {
-    var token = await messaging.getToken();
-
-    print('getToken:: Token: $token');
-  }
-  */
-
-  /*
-  void handleMsgFromBackground(msg) async {
-    final alerts = Provider.of<Alerts>(context, listen: false);
-    alerts.saveAlertDevice(msg);
-  }
-  */
-
   void initMessaging() async {
     var androiInit = AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -165,7 +150,8 @@ class _MainManagementState extends State<MainManagement> {
       provisional: false,
       sound: true,
     );
-    //print(        'notitficationPermission:: seetings: ${settings.authorizationStatus}');
+    print(
+        'notitficationPermission:: seetings: ${settings.authorizationStatus}');
   }
 
   _showDatePicker() {
@@ -190,6 +176,7 @@ class _MainManagementState extends State<MainManagement> {
   @override
   Widget build(BuildContext context) {
     final Alerts alertActions = Provider.of<Alerts>(context, listen: false);
+    final alertUpdate = Provider.of<Alerts>(context, listen: true);
 
     if (this.msg != null) {
       //print('_MainManagementState::build - Message received at loginScreen: ${this.msg.notification.title}');
@@ -223,47 +210,82 @@ class _MainManagementState extends State<MainManagement> {
                 onPressed: _showDatePicker,
                 child: Text('Selecionar data'),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
+              Card(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                        onPressed: () => {
+                              _today = DateTime.now(),
+                              alertActions.loadItemsByDate(_today),
+                              //print('_today: $_today')
+                            },
+                        child: Text('Hoje')),
+                    TextButton(
+                        onPressed: () => {
+                              _yesterday =
+                                  DateTime.now().subtract(Duration(days: 1)),
+                              alertActions.loadItemsByDate(_yesterday),
+                              //print('_yesterday: $_yesterday')
+                            },
+                        child: Text('Ontem')),
+                    TextButton(
                       onPressed: () => {
-                            _today = DateTime.now(),
-                            alertActions.loadItemsByDate(_today),
-                            //print('_today: $_today')
-                          },
-                      child: Text('Hoje')),
-                  TextButton(
+                        _weekPeriod =
+                            DateTime.now().subtract(Duration(days: 7)),
+                        alertActions.loadItemsAfterDate(_weekPeriod),
+                        //print('weekPeriod: $_weekPeriod')
+                      },
+                      child: Text('Da semana'),
+                    ),
+                    TextButton(
                       onPressed: () => {
-                            _yesterday =
-                                DateTime.now().subtract(Duration(days: 1)),
-                            alertActions.loadItemsByDate(_yesterday),
-                            //print('_yesterday: $_yesterday')
-                          },
-                      child: Text('Ontem')),
-                  TextButton(
-                    onPressed: () => {
-                      _weekPeriod = DateTime.now().subtract(Duration(days: 7)),
-                      alertActions.loadItemsAfterDate(_weekPeriod),
-                      //print('weekPeriod: $_weekPeriod')
-                    },
-                    child: Text('Da semana'),
-                  ),
-                  TextButton(
-                    onPressed: () => {
-                      _monthPeriod =
-                          DateTime.now().subtract(Duration(days: 30)),
-                      alertActions.loadItemsAfterDate(_monthPeriod),
-                      //print('_monthPeriod: $_monthPeriod')
-                    },
-                    child: Text('Do Mês'),
-                  ),
-                  TextButton(
-                    onPressed: () => {alertActions.loadAllAlerts()},
-                    child: Text('Todos'),
-                  ),
-                ],
+                        _monthPeriod =
+                            DateTime.now().subtract(Duration(days: 30)),
+                        alertActions.loadItemsAfterDate(_monthPeriod),
+                        //print('_monthPeriod: $_monthPeriod')
+                      },
+                      child: Text('Do Mês'),
+                    ),
+                    TextButton(
+                      onPressed: () => {alertActions.loadAllAlerts()},
+                      child: Text('Todos'),
+                    ),
+                  ],
+                ),
               ),
+              Card(
+                  color: Colors.white60,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                          onPressed: () => {
+                                alertActions.loadItemsByPeriod('manha'),
+                                //print('_yesterday: $_yesterday')
+                              },
+                          child: Text('Manhã')),
+                      TextButton(
+                          onPressed: () => {
+                                alertActions.loadItemsByPeriod('tarde'),
+                                //print('_yesterday: $_yesterday')
+                              },
+                          child: Text('Tarde')),
+                      TextButton(
+                          onPressed: () => {
+                                alertActions.loadItemsByPeriod('noite'),
+                                //print('_yesterday: $_yesterday')
+                              },
+                          child: Text('Noite')),
+                      TextButton(
+                          onPressed: () => {
+                                alertActions.loadItemsByPeriod('madrugada'),
+                                //print('_yesterday: $_yesterday')
+                              },
+                          child: Text('Madrugada')),
+                    ],
+                  )),
             ],
           ),
 
@@ -348,20 +370,14 @@ class _MainManagementState extends State<MainManagement> {
         ],
       ),
       bottomNavigationBar: Container(
+        height: 30.0,
         decoration: BoxDecoration(
             border: Border.all(color: Colors.black12, width: 2.0)),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          IconButton(
-            icon: const Icon(Icons.delete_forever),
-            color: Colors.red,
-            tooltip: 'Apagar todos alarmes',
-            onPressed: () => alertActions.deleteAll(),
-            iconSize: 25.0,
-            visualDensity: VisualDensity.comfortable,
+          Text(
+            '  Quantidade alertas: ${alertUpdate.itemsCount}',
+            style: TextStyle(color: Colors.blueGrey),
           ),
-          TextButton(
-              onPressed: () => alertActions.deleteAll(),
-              child: Text('Apagar todos os alarmes')),
         ]),
       ),
     );

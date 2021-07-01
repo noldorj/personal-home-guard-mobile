@@ -14,7 +14,7 @@ if (flutterRoot == null) {
 }
 
 //def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-def flutterVersionCode = '7'
+def flutterVersionCode = '9'
 //if (flutterVersionCode == null) {
 //    flutterVersionCode = '4'
 //}

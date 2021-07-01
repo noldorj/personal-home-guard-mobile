@@ -84,6 +84,29 @@ class DbUtil {
     return db.query('alerts', where: "date >= ? ", whereArgs: [dateMill]);
   }
 
+  static Future<List<Map<String, dynamic>>> getAlertByPeriod(
+      String period) async {
+    final db = await DbUtil.database();
+
+    //DateFormat format = new DateFormat("H");
+    //var newDate = format.format(date);
+    //int dateMill = format.parse(newDate).millisecondsSinceEpoch;
+
+    //print('db_util::getAlertAfterDate date: $newDate');
+
+    // 6am a 12am
+
+    if (period == 'manha') {
+      return db.query('alerts',
+          where: "hour >= ? AND hour < ? ", whereArgs: [6, 12]);
+    } else if (period == 'tarde') {
+      return db.query('alerts',
+          where: "hour >= ? AND hour < ? ", whereArgs: [12, 18]);
+    } else {
+      return null;
+    }
+  }
+
   static Future<List<Map<String, dynamic>>> getData(String table) async {
     final db = await DbUtil.database();
     return db.query(table);
