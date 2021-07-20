@@ -40,6 +40,22 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 30
 
+    packagingOptions {
+       // Fixes duplicate libraries build issue, 
+       // when your project uses more than one plugin that depend on C++ libs.
+        pickFirst 'lib/**/libc++_shared.so'
+    }
+   
+   buildTypes {
+      release {
+         minifyEnabled true
+         useProguard true
+         proguardFiles getDefaultProguardFile(
+                 'proguard-android-optimize.txt'),
+                 'proguard-rules.pro'
+      }
+   }
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -47,10 +63,12 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "br.com.portaovirtual.pv"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
+        
     }
 
     
@@ -60,9 +78,12 @@ android {
            keyAlias keystoreProperties['keyAlias']
            keyPassword keystoreProperties['keyPassword']
            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-           storePassword keystoreProperties['storePassword']
+           storePassword keystoreProperties['storePassword']  
+           
        }
    }
+
+   
 
    ndkVersion '22.1.7171670'
 
@@ -85,6 +106,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'    
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
+    implementation 'com.android.support:multidex:1.0.3' //enter the latest version
     
 }
 

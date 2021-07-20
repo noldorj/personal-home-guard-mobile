@@ -34,7 +34,9 @@ dependencies:
   sqflite: ^2.0.0+3
   path: ^1.8.0
   firebase_storage: ^8.0.1
-  flutter_local_notifications: ^5.0.0
+  flutter_local_notifications: ^5.0.0  
+  flutter_vlc_player: ^6.0.2
+  
 
   
   

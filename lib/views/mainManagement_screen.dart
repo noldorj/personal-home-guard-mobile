@@ -210,6 +210,14 @@ class _MainManagementState extends State<MainManagement> {
                 onPressed: _showDatePicker,
                 child: Text('Selecionar data'),
               ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    AppRoutes.AOVIVO,
+                  );
+                },
+                child: Text('Ver Ao-vivo'),
+              ),
               Card(
                 color: Colors.white,
                 child: Row(

@@ -6,4 +6,5 @@ class AppRoutes {
   static const PV_STATUS = '/pv-status';
   static const APP_SETUP = '/app-setup';
   static const IMAGE_ALERT = '/app-imageAlert';
+  static const AOVIVO = '/app-aovivo';
 }
